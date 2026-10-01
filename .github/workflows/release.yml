@@ -18,8 +18,13 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version-file: "go.mod"
+          go-version: "1.24"
           cache: true
+
+      - name: Patch go.mod for available Go toolchain
+        shell: powershell
+        run: |
+          (Get-Content go.mod -Raw) -replace '^go \d+\.\d+.*$', 'go 1.24' | Set-Content go.mod -NoNewline
 
       - name: Build Windows binary
         run: go build -ldflags "-s -w" -o doc-server-go.exe .
@@ -30,8 +35,6 @@ jobs:
           $out = 'doc-server-go-release'
           New-Item -ItemType Directory -Force -Path $out | Out-Null
           Copy-Item -Path doc-server-go.exe -Destination $out
-          Copy-Item -Path README.md -Destination $out
-          Copy-Item -Path build.md -Destination $out
           Copy-Item -Path start.md.example -Destination $out
           Copy-Item -Path legenda.md.example -Destination $out
           Copy-Item -Path ustawienia.toml.example -Destination $out

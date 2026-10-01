@@ -124,7 +124,6 @@ Następnie w GitHubzie:
 ZIP jest gotowy do rozpakowania i uruchomienia po skopiowaniu przykładów:
 
 - `doc-server-go.exe` – binarka serwera,
-- `README.md`, `build.md` – instrukcje,
 - `start.md.example`, `legenda.md.example` – przykłady strony głównej i legendy,
 - `ustawienia.toml.example` – szablon konfiguracji,
 - `uruchom-serwer.bat`, `zabij-serwer.bat` – skrypty startu/stopu,
