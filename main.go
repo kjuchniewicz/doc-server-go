@@ -181,22 +181,35 @@ func renderWithCheckboxes(data []byte, editable bool) (string, int) {
 }
 
 func page(title, body, user string) string {
-	nav := `<a href="/">Start</a> <a href="/docs">Dokumenty</a>`
+	brand := `<a class="brand" href="/">DTR Żarna</a>`
+	var userNav string
 	if user != "" {
-		nav += fmt.Sprintf(` | Zalogowany: <b>%s</b> <form class="inline" method="post" action="/logout"><button>Wyloguj</button></form>`, html.EscapeString(user))
+		userNav = fmt.Sprintf(`<span class="user-name">%s</span><form class="inline" method="post" action="/logout"><button>Wyloguj</button></form>`, html.EscapeString(user))
 	} else {
-		nav += ` | <a href="/login">Zaloguj</a>`
+		userNav = `<a class="btn" href="/login">Zaloguj</a>`
 	}
+	nav := `<nav class="topnav">` + brand + `<div class="nav-links"><a href="/">Start</a><a href="/docs">Dokumenty</a></div><div class="nav-user">` + userNav + `</div></nav>`
+	footer := `<footer class="site-footer"><span>Serwer dokumentacji DTR Żarna</span><span class="sep">|</span><a href="https://github.com/kjuchniewicz/doc-server-go" target="_blank" rel="noopener">GitHub</a></footer>`
 	return `<!doctype html><html lang="pl"><head><meta charset="utf-8"><title>` + html.EscapeString(title) + `</title>
 <meta name="viewport" content="width=device-width,initial-scale=1"><style>
-body{font-family:Segoe UI,Arial,sans-serif;max-width:1100px;margin:0 auto;padding:1rem 2rem;background:#1b1d22;color:#d8dce3}
-a{color:#5fb87a}header{border-bottom:2px solid #333;margin-bottom:1rem;padding-bottom:.5rem}
+body{font-family:Segoe UI,Arial,sans-serif;max-width:1100px;min-height:100vh;margin:0 auto;padding:0 2rem 1rem;background:#1b1d22;color:#d8dce3;display:flex;flex-direction:column}
+a{color:#5fb87a}
+.topnav{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:#15171b;border-bottom:2px solid #2d6a4f;padding:.75rem 0;margin-bottom:1rem}
+.brand{font-size:1.25rem;font-weight:600;color:#8fc7ff;text-decoration:none}
+.nav-links{display:flex;gap:.5rem}
+.nav-links a,.nav-user a{padding:.35rem .8rem;border-radius:4px;text-decoration:none;color:#d8dce3}
+.nav-links a:hover,.nav-user a:hover{background:#2a2d33}
+.btn{display:inline-block;background:#2d6a4f;color:#fff;padding:.35rem .8rem;border-radius:4px;text-decoration:none}
+.btn:hover{background:#367c5c}
+.nav-user{display:flex;align-items:center;gap:.75rem}
+.user-name{font-weight:600;color:#8fc7ff}
+form.inline{display:inline}
 table{border-collapse:collapse;width:100%}td,th{border:1px solid #3a3f47;padding:.35rem .55rem}th{background:#26292f}
 tr:nth-child(even) td{background:#202329}
 button{padding:.4rem 1rem;cursor:pointer;background:#2d6a4f;color:#fff;border:0;border-radius:4px}
 input{background:#15171b;color:#d8dce3;border:1px solid #3a3f47;padding:.35rem}
 code{background:#2a2d33;padding:0 .2em}h1,h2,h3{color:#8fc7ff}
-form.inline{display:inline}.group{color:#8fc7ff;margin:1.2rem 0 .4rem;border-bottom:1px solid #333}
+.group{color:#8fc7ff;margin:1.2rem 0 .4rem;border-bottom:1px solid #333}
 .lock{background:#4d3f1a;border:1px solid #8a6d1f;padding:.5rem;border-radius:4px}
 .free{background:#1d3a24;border:1px solid #2f6b3a;padding:.5rem;border-radius:4px}
 textarea{width:100%;height:60vh;font-family:Consolas,monospace;font-size:14px;background:#15171b;color:#d8dce3;border:1px solid #3a3f47}
@@ -219,7 +232,11 @@ textarea{width:100%;height:60vh;font-family:Consolas,monospace;font-size:14px;ba
 .docs-table td.status,.docs-table td.department{width:1%;white-space:nowrap}
 .docs-table th{text-align:left;white-space:nowrap}
 .note{color:#9aa3b0;font-size:.9rem}
-</style></head><body><header>` + nav + `</header>` + body + `</body></html>`
+main{flex:1}
+.site-footer{margin-top:2rem;padding:1rem 0;border-top:1px solid #333;color:#9aa3b0;font-size:.85rem;text-align:center}
+.site-footer a{color:#7fb0e8}
+.site-footer .sep{margin:0 .6rem}
+</style></head><body>` + nav + `<main>` + body + `</main>` + footer + `</body></html>`
 }
 
 func safeDoc(rel string) (string, bool) {
