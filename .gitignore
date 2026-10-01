@@ -25,3 +25,7 @@ ustawienia.toml
 *.bak
 _fixmd.ps1
 _reorg.ps1
+
+# Real documentation tree is local-only.
+# Copy dokumenty-example/ -> dokumenty/ and fill in your project data.
+/dokumenty/

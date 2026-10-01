@@ -21,10 +21,11 @@ doc-server-go/
   ustawienia.toml.example  # szablon konfiguracji
   start.md                 # treść strony głównej
   legenda.md               # opcjonalna legenda pod start.md
-  dokumenty/               # drzewo dokumentacji
-    PAP/DTR/               # dokumenty maszyny PAP
-    BNS/DTR/               # dokumenty maszyny BNS
-    Wspolne/               # dokumenty wspólne (np. ryzyko resztkowe suwnicy)
+  dokumenty-example/       # przykładowe drzewo dokumentacji (do repo)
+    PAP/DTR/               # przykładowe dokumenty maszyny PAP
+    BNS/DTR/               # przykładowe dokumenty maszyny BNS
+    Wspolne/               # przykładowe dokumenty wspólne
+  dokumenty/               # realne drzewo dokumentacji (lokalnie, ignorowane w Git)
   static/                  # zasoby statyczne (EasyMDE, CSS)
   uruchom-serwer.bat       # uruchomienie w tle z logami
   zabij-serwer.bat         # zatrzymanie wszystkich instancji
@@ -37,6 +38,15 @@ doc-server-go/
 - Go 1.23+
 - Windows (dla skryptów `.bat` / Harmonogramu zadań)
 - Dostęp do kontrolera domeny LDAP, jeśli używasz logowania domenowego
+
+## Przygotowanie dokumentacji
+
+```bash
+cp -r dokumenty-example dokumenty
+# albo w Eksploratorze: skopiuj folder dokumenty-example jako dokumenty
+```
+
+Następnie uzupełnij lub zastąp pliki w `dokumenty/` właściwą treścią.
 
 ## Konfiguracja
 
