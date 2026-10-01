@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-16"?>
+<Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+	<RegistrationInfo>
+		<Description>
+			Serwer dokumentacji DTR (doc-server-go) - autostart przy starcie systemu
+		</Description>
+	</RegistrationInfo>
+	<Triggers>
+		<BootTrigger>
+			<Enabled>
+				true
+			</Enabled>
+		</BootTrigger>
+	</Triggers>
+	<Principals>
+		<Principal id="Author">
+			<LogonType>
+				S4U
+			</LogonType>
+			<RunLevel>
+				LeastPrivilege
+			</RunLevel>
+		</Principal>
+	</Principals>
+	<Settings>
+		<MultipleInstancesPolicy>
+			IgnoreNew
+		</MultipleInstancesPolicy>
+		<DisallowStartIfOnBatteries>
+			false
+		</DisallowStartIfOnBatteries>
+		<StopIfGoingOnBatteries>
+			false
+		</StopIfGoingOnBatteries>
+		<AllowHardTerminate>
+			true
+		</AllowHardTerminate>
+		<StartWhenAvailable>
+			true
+		</StartWhenAvailable>
+		<RunOnlyIfNetworkAvailable>
+			false
+		</RunOnlyIfNetworkAvailable>
+		<AllowStartOnDemand>
+			true
+		</AllowStartOnDemand>
+		<Enabled>
+			true
+		</Enabled>
+		<Hidden>
+			false
+		</Hidden>
+		<ExecutionTimeLimit>
+			PT0S
+		</ExecutionTimeLimit>
+		<RestartOnFailure>
+			<Interval>
+				PT1M
+			</Interval>
+			<Count>
+				3
+			</Count>
+		</RestartOnFailure>
+	</Settings>
+	<Actions Context="Author">
+		<Exec>
+			<Command>
+				D:\Projekty\ZHU\MichelinDTR\doc-server-go\doc-server-go.exe
+			</Command>
+			<WorkingDirectory>
+				D:\Projekty\ZHU\MichelinDTR\doc-server-go
+			</WorkingDirectory>
+		</Exec>
+	</Actions>
+</Task>

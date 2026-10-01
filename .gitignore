@@ -1,0 +1,27 @@
+# Compiled binary and build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Go workspace
+go.work
+
+# Local logs
+*.log
+serwer.log
+serwer-err.log
+
+# Runtime / local configuration with credentials and internal network settings.
+# Copy ustawienia.toml.example -> ustawienia.toml and adjust to your environment.
+ustawienia.toml
+
+# Temporary scripts and backup files
+*.tmp
+*.bak
+_fixmd.ps1
+_reorg.ps1
