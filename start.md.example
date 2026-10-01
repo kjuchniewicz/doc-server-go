@@ -1,0 +1,17 @@
+# Strona startowa – przykład
+
+To jest przykładowa zawartość strony głównej serwera dokumentacji.
+
+Skopiuj ten plik jako `start.md` i dostosuj do swojego projektu.
+
+## Przykładowa checklista
+
+- [ ] Element 1 do uzupełnienia
+- [ ] Element 2 do uzupełnienia
+- [ ] Element 3 do uzupełnienia
+
+## Instrukcja obsługi
+
+- Przeglądaj dokumenty w zakładce **Dokumenty**.
+- Zaloguj się domenowo, aby edytować pliki Markdown.
+- Checkboxy na tej stronie mogą przełączać tylko użytkownicy wpisani w `ustawienia.toml`.

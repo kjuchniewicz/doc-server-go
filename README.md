@@ -19,8 +19,10 @@ doc-server-go/
   go.mod / go.sum          # moduły Go
   ustawienia.toml          # konfiguracja lokalna (nie wrzucać do repo!)
   ustawienia.toml.example  # szablon konfiguracji
-  start.md                 # treść strony głównej
-  legenda.md               # opcjonalna legenda pod start.md
+  start.md                 # treść strony głównej (lokalna, ignorowana w Git)
+  start.md.example         # przykład strony głównej
+  legenda.md               # opcjonalna legenda pod start.md (lokalna, ignorowana w Git)
+  legenda.md.example       # przykład legendy
   dokumenty-example/       # przykładowe drzewo dokumentacji (do repo)
     PAP/DTR/               # przykładowe dokumenty maszyny PAP
     BNS/DTR/               # przykładowe dokumenty maszyny BNS
@@ -43,10 +45,12 @@ doc-server-go/
 
 ```bash
 cp -r dokumenty-example dokumenty
-# albo w Eksploratorze: skopiuj folder dokumenty-example jako dokumenty
+cp start.md.example start.md
+cp legenda.md.example legenda.md
+# albo w Eksploratorze: skopiuj foldery/pliki .example jako oryginały
 ```
 
-Następnie uzupełnij lub zastąp pliki w `dokumenty/` właściwą treścią.
+Następnie uzupełnij lub zastąp pliki w `dokumenty/`, `start.md` i `legenda.md` właściwą treścią.
 
 ## Konfiguracja
 

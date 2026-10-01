@@ -1,0 +1,16 @@
+## Legenda skrótów – przykład
+
+| Skrót | Znaczenie |
+|-------|-----------|
+| DTR   | Dokumentacja Techniczno-Ruchowa |
+| DTE   | Dokumentacja Techniczna Eksploatacyjna |
+| DTM   | Klasyfikacja dokumentów Michelin |
+| DOC   | Numer dokumentu w systemie klienta |
+| ZHU1- | Wewnętrzny prefiks numeracji rysunków |
+| PF    | Numer formularza/wzoru |
+| UDT   | Urząd Dozoru Technicznego |
+| LOTO  | Lockout-Tagout |
+| PAP   | Pierwsza maszyna w procesie |
+| BNS   | Druga maszyna w procesie |
+
+Skopiuj ten plik jako `legenda.md` i uzupełnij o własne skróty.

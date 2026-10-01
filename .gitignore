@@ -29,3 +29,8 @@ _reorg.ps1
 # Real documentation tree is local-only.
 # Copy dokumenty-example/ -> dokumenty/ and fill in your project data.
 /dokumenty/
+
+# Local homepage content.
+# Copy *.md.example -> *.md and edit for your project.
+/start.md
+/legenda.md
