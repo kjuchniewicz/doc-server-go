@@ -1,0 +1,228 @@
+/* Główne style aplikacji – ciemny motyw */
+
+body {
+    font-family: Segoe UI, Arial, sans-serif;
+    max-width: 1100px;
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 0 2rem 1rem;
+    background: #1b1d22;
+    color: #d8dce3;
+    display: flex;
+    flex-direction: column;
+}
+
+a { color: #5fb87a; }
+
+/* Górne menu */
+.topnav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: #15171b;
+    border-bottom: 2px solid #2d6a4f;
+    padding: .75rem 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.brand {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #8fc7ff;
+    text-decoration: none;
+}
+
+.nav-links { display: flex; gap: .5rem; }
+
+.nav-links a,
+.nav-user a {
+    padding: .35rem .8rem;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #d8dce3;
+}
+
+.nav-links a:hover,
+.nav-user a:hover { background: #2a2d33; }
+
+.btn {
+    display: inline-block;
+    background: #2d6a4f;
+    color: #fff;
+    padding: .35rem .8rem;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.btn:hover { background: #367c5c; }
+
+.nav-user {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+}
+
+.user-name { font-weight: 600; color: #8fc7ff; }
+
+form.inline { display: inline; }
+
+main { flex: 1; }
+
+/* Tabele */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #3a3f47;
+    padding: .35rem .55rem;
+}
+
+th { background: #26292f; }
+
+tr:nth-child(even) td { background: #202329; }
+
+/* Formularze */
+button {
+    padding: .4rem 1rem;
+    cursor: pointer;
+    background: #2d6a4f;
+    color: #fff;
+    border: 0;
+    border-radius: 4px;
+}
+
+input {
+    background: #15171b;
+    color: #d8dce3;
+    border: 1px solid #3a3f47;
+    padding: .35rem;
+}
+
+code {
+    background: #2a2d33;
+    padding: 0 .2em;
+}
+
+h1, h2, h3 { color: #8fc7ff; }
+
+/* Grupy dokumentów */
+.group {
+    color: #8fc7ff;
+    margin: 1.2rem 0 .4rem;
+    border-bottom: 1px solid #333;
+}
+
+.group.lvl1 { font-size: 1.1em; color: #7fb0e8; }
+.group.lvl2 { font-size: .95em; color: #6f9fd0; }
+
+/* Statusy blokad */
+.lock {
+    background: #4d3f1a;
+    border: 1px solid #8a6d1f;
+    padding: .5rem;
+    border-radius: 4px;
+}
+
+.free {
+    background: #1d3a24;
+    border: 1px solid #2f6b3a;
+    padding: .5rem;
+    border-radius: 4px;
+}
+
+/* Edytor */
+textarea {
+    width: 100%;
+    height: 60vh;
+    font-family: Consolas, monospace;
+    font-size: 14px;
+    background: #15171b;
+    color: #d8dce3;
+    border: 1px solid #3a3f47;
+}
+
+.EasyMDEContainer .CodeMirror,
+.EasyMDEContainer .editor-statusbar,
+.editor-preview {
+    background: #1b1d22;
+    color: #d8dce3;
+    border-color: #3a3f47;
+}
+
+.CodeMirror-cursor { border-color: #d8dce3; }
+
+.editor-toolbar {
+    border: 1px solid #3a3f47;
+    border-radius: 4px 4px 0 0;
+}
+
+.editor-toolbar button {
+    color: #d8dce3 !important;
+    background: transparent;
+}
+
+.editor-toolbar button:hover,
+.editor-toolbar button.active {
+    background: #2d3138 !important;
+    border-color: #4a5058 !important;
+    color: #fff !important;
+}
+
+.editor-toolbar i.separator { border-color: #3a3f47 !important; }
+
+.CodeMirror-fullscreen,
+.editor-preview-full,
+.editor-preview-side.editor-preview-active-side {
+    background: #1b1d22 !important;
+    color: #d8dce3 !important;
+}
+
+.cm-s-default .cm-header { color: #8fc7ff; }
+.cm-s-default .cm-strong { color: #ffd479; }
+.cm-s-default .cm-em { color: #c792ea; }
+.cm-s-default .cm-link,
+.cm-s-default .cm-url { color: #5fb87a; }
+.cm-s-default .cm-quote { color: #9aa3b0; }
+.cm-s-default .cm-comment { color: #7f848e; }
+.cm-s-default .cm-string { color: #a5d6a7; }
+.cm-s-default .cm-hr { color: #5a6270; }
+
+.CodeMirror-selected { background: #3a4250 !important; }
+.editor-statusbar { color: #9aa3b0; }
+
+/* Lista dokumentów */
+.docs-table { table-layout: auto; }
+
+.docs-table td:first-child { width: 100%; }
+
+.docs-table td.status,
+.docs-table td.department {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.docs-table th {
+    text-align: left;
+    white-space: nowrap;
+}
+
+.note {
+    color: #9aa3b0;
+    font-size: .9rem;
+}
+
+/* Stopka */
+.site-footer {
+    margin-top: 2rem;
+    padding: 1rem 0;
+    border-top: 1px solid #333;
+    color: #9aa3b0;
+    font-size: .85rem;
+    text-align: center;
+}
+
+.site-footer a { color: #7fb0e8; }
+.site-footer .sep { margin: 0 .6rem; }
