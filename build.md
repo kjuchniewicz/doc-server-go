@@ -100,8 +100,8 @@ publikowania jej jako Release.
 
 3. GitHub Actions (`.github/workflows/release.yml`) automatycznie:
    - zbuduje binarkę `doc-server-go.exe` na Windows,
-   - utworzy Release z nazwą tagu,
-   - dołączy plik `doc-server-go.exe` jako załącznik.
+   - spakuje ją razem z przykładowymi plikami w `doc-server-go.zip`,
+   - utworzy Release z nazwą tagu i dołączy plik ZIP jako załącznik.
 
 ### Ręczne wydanie
 
@@ -119,12 +119,29 @@ Następnie w GitHubzie:
 - przeciągnij `doc-server-go.exe` do pola załączników,
 - opublikuj.
 
-### Co powinno zawierać wydanie
+### Co zawiera automatyczny załącznik `doc-server-go.zip`
 
-- Binarka `doc-server-go.exe`.
-- Pliki konfiguracyjne / przykłady z repo (`ustawienia.toml.example`,
-  `start.md.example`, `legenda.md.example`, `dokumenty-example/`),
-  które użytkownik musi skopiować i uzupełnić przed uruchomieniem.
+ZIP jest gotowy do rozpakowania i uruchomienia po skopiowaniu przykładów:
 
-> Uwaga: nie dołączaj `ustawienia.toml`, `start.md`, `legenda.md` ani folderu
-> `dokumenty/` – zawierają one lokalne, często wrażliwe dane projektu.
+- `doc-server-go.exe` – binarka serwera,
+- `README.md`, `build.md` – instrukcje,
+- `start.md.example`, `legenda.md.example` – przykłady strony głównej i legendy,
+- `ustawienia.toml.example` – szablon konfiguracji,
+- `uruchom-serwer.bat`, `zabij-serwer.bat` – skrypty startu/stopu,
+- `install-service.bat`, `zadanie.xml` – autostart przez Harmonogram zadań,
+- `static/` – zasoby statyczne (EasyMDE, style),
+- `dokumenty-example/` – przykładowe drzewo dokumentacji.
+
+Po rozpakowaniu użytkownik musi skopiować pliki `.example` na właściwe nazwy
+i uzupełnić je danymi projektu:
+
+```batch
+copy start.md.example start.md
+copy legenda.md.example legenda.md
+xcopy /E /I dokumenty-example dokumenty
+copy ustawienia.toml.example ustawienia.toml
+```
+
+> Uwaga: nie dołączaj do wydania rzeczywistych plików `ustawienia.toml`,
+> `start.md`, `legenda.md` ani folderu `dokumenty/` – zawierają one lokalne,
+> często wrażliwe dane projektu.

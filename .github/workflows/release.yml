@@ -3,7 +3,7 @@ name: Build release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 permissions:
   contents: write
@@ -18,14 +18,33 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version-file: 'go.mod'
+          go-version-file: "go.mod"
           cache: true
 
       - name: Build Windows binary
         run: go build -ldflags "-s -w" -o doc-server-go.exe .
 
+      - name: Prepare release archive
+        shell: powershell
+        run: |
+          $out = 'doc-server-go-release'
+          New-Item -ItemType Directory -Force -Path $out | Out-Null
+          Copy-Item -Path doc-server-go.exe -Destination $out
+          Copy-Item -Path README.md -Destination $out
+          Copy-Item -Path build.md -Destination $out
+          Copy-Item -Path start.md.example -Destination $out
+          Copy-Item -Path legenda.md.example -Destination $out
+          Copy-Item -Path ustawienia.toml.example -Destination $out
+          Copy-Item -Path uruchom-serwer.bat -Destination $out
+          Copy-Item -Path zabij-serwer.bat -Destination $out
+          Copy-Item -Path install-service.bat -Destination $out
+          Copy-Item -Path zadanie.xml -Destination $out
+          Copy-Item -Path static -Destination $out -Recurse -Force
+          Copy-Item -Path dokumenty-example -Destination $out -Recurse -Force
+          Compress-Archive -Path "$out\*" -DestinationPath doc-server-go.zip -Force
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: doc-server-go.exe
+          files: doc-server-go.zip
           generate_release_notes: true
