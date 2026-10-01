@@ -82,3 +82,49 @@ doc-server-go/
 - `go run .` – uruchamia serwer bez budowania pliku wykonywalnego.
 - `go test ./...` – uruchamia testy (jeśli są dodane).
 - Logi bieżącej sesji pojawiają się w `serwer.log` / `serwer-err.log`.
+
+## Wydania (GitHub Releases)
+
+Projekt wykorzystuje GitHub Actions do automatycznego budowania binarki Windows i
+publikowania jej jako Release.
+
+### Automatyczne wydanie po tagu
+
+1. Upewnij się, że wszystkie zmiany są w głównej gałęzi i działają poprawnie.
+2. Utwórz i wypchnij tag zgodny z Semantic Versioning:
+
+   ```bash
+   git tag -a v1.0.0 -m "Pierwsze stabilne wydanie"
+   git push origin v1.0.0
+   ```
+
+3. GitHub Actions (`.github/workflows/release.yml`) automatycznie:
+   - zbuduje binarkę `doc-server-go.exe` na Windows,
+   - utworzy Release z nazwą tagu,
+   - dołączy plik `doc-server-go.exe` jako załącznik.
+
+### Ręczne wydanie
+
+Jeśli nie chcesz korzystać z Actions, możesz zbudować binarkę lokalnie:
+
+```bash
+go build -ldflags "-s -w" -o doc-server-go.exe .
+```
+
+Następnie w GitHubzie:
+
+- **Releases → Draft a new release**,
+- wybierz lub utwórz tag,
+- nazwij wydanie i dodaj opis,
+- przeciągnij `doc-server-go.exe` do pola załączników,
+- opublikuj.
+
+### Co powinno zawierać wydanie
+
+- Binarka `doc-server-go.exe`.
+- Pliki konfiguracyjne / przykłady z repo (`ustawienia.toml.example`,
+  `start.md.example`, `legenda.md.example`, `dokumenty-example/`),
+  które użytkownik musi skopiować i uzupełnić przed uruchomieniem.
+
+> Uwaga: nie dołączaj `ustawienia.toml`, `start.md`, `legenda.md` ani folderu
+> `dokumenty/` – zawierają one lokalne, często wrażliwe dane projektu.

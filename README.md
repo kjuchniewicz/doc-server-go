@@ -15,19 +15,18 @@ Prosty serwer dokumentacji Markdown dla projektu DTR Żarna (maszyny PAP i BNS).
    ```
 
 3. Otwórz `ustawienia.toml` i wpisz:
-
    - `port` – port HTTP (domyślnie `8080`),
    - dane kontrolera domeny LDAP (`ldap_url`, `domain`, `domain_nt`),
    - loginy domenowe, które mogą przełączać checkboxy na stronie głównej (`[users]`).
 
-4. Zbuduj i uruchom serwer:
+4. Pobierz gotową binarkę z zakładki **Releases** na GitHubie lub zbuduj serwer samodzielnie:
 
    ```bash
    go build -o doc-server-go.exe .
    ./doc-server-go.exe
    ```
 
-   Szczegóły budowy, skrypty Windows i autostart znajdziesz w [`build.md`](build.md).
+   Szczegóły budowy, skrypty Windows, autostart oraz proces tworzenia wydań znajdziesz w [`build.md`](build.md).
 
 5. Otwórz w przeglądarce:
 
