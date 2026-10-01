@@ -5,6 +5,10 @@
 # Port startowy. Jesli zajęty, serwer próbuje port+1 (maksymalnie 5 prób).
 port = 8080
 
+# Nazwa serwisu w górnym menu oraz treść stopki.
+site_name = "DTR Żarna"
+footer = "Juchniewicz Kamil [k.juchniewicz@zarna.pl]"
+
 # Logowanie domenowe przez LDAP / Active Directory.
 # Zalogować może się każdy użytkownik domeny (login + hasło jak do komputera).
 # Upewnij się, że kontroler akceptuje simple bind na wybranym porcie.

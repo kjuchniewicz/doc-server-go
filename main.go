@@ -57,6 +57,8 @@ func lockOf(rel string) *lock {
 
 type Config struct {
 	Port     int
+	SiteName string
+	Footer   string
 	LdapURL  string
 	Domain   string
 	DomainNT string
@@ -68,6 +70,8 @@ type Config struct {
 func loadConfig() Config {
 	c := Config{
 		Port:     8081,
+		SiteName: "DTR Żarna",
+		Footer:   "Juchniewicz Kamil [k.juchniewicz@zarna.pl]",
 		LdapURL:  "ldap://192.168.1.7",
 		Domain:   "zdc.ols",
 		DomainNT: "ZDC",
@@ -108,6 +112,10 @@ func loadConfig() Config {
 				c.Domain = v
 			case "domain_nt":
 				c.DomainNT = v
+			case "site_name":
+				c.SiteName = v
+			case "footer":
+				c.Footer = v
 			}
 		}
 	}
@@ -181,7 +189,14 @@ func renderWithCheckboxes(data []byte, editable bool) (string, int) {
 }
 
 func page(title, body, user string) string {
-	brand := `<a class="brand" href="/">DTR Żarna</a>`
+	mu.RLock()
+	siteName := cfg.SiteName
+	footerText := cfg.Footer
+	mu.RUnlock()
+	if siteName == "" {
+		siteName = "DTR Żarna"
+	}
+	brand := `<a class="brand" href="/">` + html.EscapeString(siteName) + `</a>`
 	var userNav string
 	if user != "" {
 		userNav = fmt.Sprintf(`<span class="user-name">%s</span><form class="inline" method="post" action="/logout"><button>Wyloguj</button></form>`, html.EscapeString(user))
@@ -189,12 +204,12 @@ func page(title, body, user string) string {
 		userNav = `<a class="btn" href="/login">Zaloguj</a>`
 	}
 	nav := `<nav class="topnav">` + brand + `<div class="nav-links"><a href="/">Start</a><a href="/docs">Dokumenty</a></div><div class="nav-user">` + userNav + `</div></nav>`
-	footer := `<footer class="site-footer"><span>Serwer dokumentacji DTR Żarna</span><span class="sep">|</span><a href="https://github.com/kjuchniewicz/doc-server-go" target="_blank" rel="noopener">GitHub</a></footer>`
+	footer := `<footer class="site-footer"><span>` + html.EscapeString(footerText) + `</span><span class="sep">|</span><a href="https://github.com/kjuchniewicz/doc-server-go" target="_blank" rel="noopener">GitHub</a></footer>`
 	return `<!doctype html><html lang="pl"><head><meta charset="utf-8"><title>` + html.EscapeString(title) + `</title>
 <meta name="viewport" content="width=device-width,initial-scale=1"><style>
 body{font-family:Segoe UI,Arial,sans-serif;max-width:1100px;min-height:100vh;margin:0 auto;padding:0 2rem 1rem;background:#1b1d22;color:#d8dce3;display:flex;flex-direction:column}
 a{color:#5fb87a}
-.topnav{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:#15171b;border-bottom:2px solid #2d6a4f;padding:.75rem 0;margin-bottom:1rem}
+.topnav{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:#15171b;border-bottom:2px solid #2d6a4f;padding:.75rem 1.5rem;margin-bottom:1rem}
 .brand{font-size:1.25rem;font-weight:600;color:#8fc7ff;text-decoration:none}
 .nav-links{display:flex;gap:.5rem}
 .nav-links a,.nav-user a{padding:.35rem .8rem;border-radius:4px;text-decoration:none;color:#d8dce3}

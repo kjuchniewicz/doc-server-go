@@ -16,6 +16,8 @@ Prosty serwer dokumentacji Markdown dla projektu DTR Żarna (maszyny PAP i BNS).
 
 3. Otwórz `ustawienia.toml` i wpisz:
    - `port` – port HTTP (domyślnie `8080`),
+   - `site_name` – nazwa wyświetlana w górnym menu,
+   - `footer` – treść stopki (np. dane autora),
    - dane kontrolera domeny LDAP (`ldap_url`, `domain`, `domain_nt`),
    - loginy domenowe, które mogą przełączać checkboxy na stronie głównej (`[users]`).
 
