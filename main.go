@@ -25,8 +25,9 @@ func main() {
 	http.HandleFunc("/release", release)
 	http.HandleFunc("/beat", beat)
 	http.HandleFunc("/lockstate", lockState)
+	http.HandleFunc("/preview", previewRender)
 
-	// Zasoby statyczne: style.css i EasyMDE.
+	// Zasoby statyczne: style.css.
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	// Próbujemy port z konfiguracji, potem kolejne (maksymalnie +4).

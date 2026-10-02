@@ -24,7 +24,7 @@ func pageStart(w http.ResponseWriter, r *http.Request) {
 	b.WriteString("<h1>Dokumentacja DTR</h1>")
 
 	if data, err := os.ReadFile("start.md"); err == nil {
-		htmlStr, _ := renderWithCheckboxes(data, canEdit(user))
+		htmlStr, _ := renderWithCheckboxes(data, checkboxOpts{editable: canEdit(user)})
 		b.WriteString(htmlStr)
 		b.WriteString(`<p class="note">Plik: start.md – edytowany bezpośrednio na dysku, strona odświeża się sama po zmianie.</p>`)
 	}
@@ -292,15 +292,28 @@ func pageEdit(w http.ResponseWriter, r *http.Request) {
 	log.Println("EDYCJA", user, rel)
 
 	body := `<h1>Edycja: ` + html.EscapeString(rel) + `</h1>
-<link rel="stylesheet" href="/static/easymde/easymde.min.css">
-<script src="/static/easymde/easymde.min.js"></script>
-<form method="post" action="/save?f=` + urlq(rel) + `">
-<textarea name="c" id="ed">` + html.EscapeString(string(data)) + `</textarea>
+<form id="editform" method="post" action="/save?f=` + urlq(rel) + `">
+<textarea id="rawmd" style="display:none">` + html.EscapeString(string(data)) + `</textarea>
+<input type="hidden" name="c" id="mdcontent">
+<div id="editor"></div>
 <p><button type="submit">Zapisz</button>
-<a href="/release?f=` + urlq(rel) + `">Anuluj (zwolnij blokadę)</a></p></form>
+<a href="/release?f=` + urlq(rel) + `">Anuluj (zwolnij blokadę)</a></p>
+</form>
+<link rel="stylesheet" href="/static/toastui/toastui-editor.min.css">
+<script src="/static/toastui/toastui-editor-all.min.js"></script>
 <script>
-try{new EasyMDE({element:document.getElementById('ed'),spellChecker:false,sideBySideFullscreen:false});}
-catch(e){console.error(e);}
+const editor = new toastui.Editor({
+  el: document.getElementById('editor'),
+  initialEditType: 'wysiwyg',
+  previewStyle: 'vertical',
+  height: '60vh',
+  initialValue: document.getElementById('rawmd').value,
+  usageStatistics: false,
+  hideModeSwitch: true
+});
+document.getElementById('editform').addEventListener('submit', function(e){
+  document.getElementById('mdcontent').value = editor.getMarkdown();
+});
 setInterval(()=>fetch('/beat?f=` + urlq(rel) + `',{method:'POST'}),30000);
 </script>`
 	fmt.Fprint(w, page("Edycja "+rel, body, user))

@@ -1,16 +1,18 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"html"
+	"io"
 	"net/http"
 	"os"
 	"regexp"
 	"strings"
 
-	"github.com/gomarkdown/markdown"
-	mhtml "github.com/gomarkdown/markdown/html"
-	"github.com/gomarkdown/markdown/parser"
+	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
+	gmhtml "github.com/yuin/goldmark/renderer/html"
 )
 
 // ---------- renderowanie Markdown i szablon strony ----------
@@ -18,31 +20,52 @@ import (
 // cbRe dopasowuje linie z checkboxami Markdown.
 var cbRe = regexp.MustCompile(`^(\s*[-*+] )\[([ xX])\]`)
 
-// renderMD konwertuje Markdown na HTML.
+// mdEngine to skonfigurowany parser/renderer goldmark.
+// Ze względu na to, że wstrzykujemy do źródła <input>, włączamy renderowanie
+// surowego HTML (WithUnsafe) oraz rozszerzenia: tabele, przekreślenia, autolinki.
+var mdEngine = goldmark.New(
+	goldmark.WithExtensions(
+		extension.Table,
+		extension.Strikethrough,
+		extension.Linkify,
+		extension.TaskList,
+	),
+	goldmark.WithRendererOptions(gmhtml.WithUnsafe()),
+)
+
+// renderMD konwertuje Markdown na HTML przy użyciu goldmark.
 func renderMD(data []byte) string {
-	ext := parser.CommonExtensions | parser.AutoHeadingIDs
-	p := parser.NewWithExtensions(ext)
-	renderer := mhtml.NewRenderer(mhtml.RendererOptions{
-		Flags: mhtml.CommonFlags | mhtml.HrefTargetBlank,
-	})
-	return string(markdown.ToHTML(data, p, renderer))
+	var buf bytes.Buffer
+	if err := mdEngine.Convert(data, &buf); err != nil {
+		return html.EscapeString(err.Error())
+	}
+	return buf.String()
 }
 
-// renderWithCheckboxes zamienia linie checkboxów na <input>.
+// checkboxOpts steruje tym, czy checkboxy mają być klikalne.
+type checkboxOpts struct {
+	editable bool
+}
+
+// renderWithCheckboxes zamienia linie checkboxów Markdown na <input>.
 // Zwraca HTML oraz liczbę linii oryginalnego dokumentu.
-func renderWithCheckboxes(data []byte, editable bool) (string, int) {
+func renderWithCheckboxes(data []byte, opts checkboxOpts) (string, int) {
 	lines := strings.Split(string(data), "\n")
-	for i, l := range lines {
-		if m := cbRe.FindStringSubmatch(l); m != nil {
-			dis := " disabled"
+	for i, line := range lines {
+		if m := cbRe.FindStringSubmatch(line); m != nil {
 			chk := ""
-			if editable {
-				dis = ""
-			}
 			if m[2] != " " {
 				chk = " checked"
 			}
-			lines[i] = m[1] + fmt.Sprintf(`<input type="checkbox" class="cb" data-line="%d"%s%s>`, i, chk, dis) + l[len(m[0]):]
+			dis := " disabled"
+			if opts.editable {
+				dis = ""
+			}
+			input := fmt.Sprintf(
+				`<input type="checkbox" class="cb" data-line="%d"%s%s>`,
+				i, chk, dis,
+			)
+			lines[i] = m[1] + input + line[len(m[0]):]
 		}
 	}
 	return renderMD([]byte(strings.Join(lines, "\n"))), len(lines)
@@ -64,24 +87,42 @@ func page(title, body, user string) string {
 
 	var userNav string
 	if user != "" {
-		userNav = fmt.Sprintf(`<span class="user-name">%s</span><form class="inline" method="post" action="/logout"><button>Wyloguj</button></form>`, html.EscapeString(user))
+		logoutBtn := `<form class="inline" method="post" action="/logout">` +
+			`<button>Wyloguj</button></form>`
+		userNav = fmt.Sprintf(
+			`<span class="user-name">%s</span>%s`,
+			html.EscapeString(user), logoutBtn,
+		)
 	} else {
 		userNav = `<a class="btn" href="/login">Zaloguj</a>`
 	}
 
-	nav := `<nav class="topnav">` + brand + `<div class="nav-links"><a href="/">Start</a><a href="/docs">Dokumenty</a></div><div class="nav-user">` + userNav + `</div></nav>`
+	links := `<a href="/docs">Dokumenty</a>`
+	nav := `<nav class="topnav">` + brand +
+		`<div class="nav-links">` + links + `</div>` +
+		`<div class="nav-user">` + userNav + `</div></nav>`
 
 	adminLink := ""
 	if adminEmail != "" {
-		adminLink = `<span>Kontakt: <a href="mailto:` + html.EscapeString(adminEmail) + `">` + html.EscapeString(adminEmail) + `</a></span><span class="sep">|</span>`
+		escaped := html.EscapeString(adminEmail)
+		adminLink = `<span>Kontakt: <a href="mailto:` + escaped + `">` + escaped + `</a></span>`
+		adminLink += `<span class="sep">|</span>`
 	}
 
-	footer := `<footer class="site-footer"><span>` + html.EscapeString(footerText) + `</span><span class="sep">|</span>` + adminLink + `<a href="https://github.com/kjuchniewicz/doc-server-go" target="_blank" rel="noopener">GitHub</a></footer>`
+	escapedFooter := html.EscapeString(footerText)
+	ghLink := `<a href="https://github.com/kjuchniewicz/doc-server-go"` +
+		` target="_blank" rel="noopener">GitHub</a>`
+	footer := `<footer class="site-footer"><span>` + escapedFooter + `</span>` +
+		`<span class="sep">|</span>` + adminLink + ghLink + `</footer>`
 
-	return `<!doctype html><html lang="pl"><head><meta charset="utf-8"><title>` + html.EscapeString(title) + `</title>
+	head := `<head><meta charset="utf-8"><title>` + html.EscapeString(title) + `</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" href="/static/style.css">
-</head><body>` + nav + `<main>` + body + `</main>` + footer + `</body></html>`
+</head>`
+
+	return `<!doctype html><html lang="pl">` + head +
+		`<body>` + nav + `<main>` + body + `</main>` +
+		footer + `</body></html>`
 }
 
 // contentVersion zwraca sumaryczną „wersję” plików start.md i legenda.md
@@ -98,8 +139,24 @@ func contentVersion() int64 {
 }
 
 // version obsługuje endpoint /version używany przez stronę startowej do pollingu.
-func version(w http.ResponseWriter, r *http.Request) {
+func version(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Cache-Control", "no-store")
-	fmt.Fprintf(w, `{"v":"%d"}`, contentVersion())
+	_, _ = fmt.Fprintf(w, `{"v":"%d"}`, contentVersion())
+}
+
+// previewRender obsługuje endpoint /preview – renderuje przesłany Markdown na serwerze.
+func previewRender(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "wymagana metoda POST", http.StatusMethodNotAllowed)
+		return
+	}
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "błąd odczytu", http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	_, _ = fmt.Fprint(w, renderMD(body))
 }

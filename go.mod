@@ -4,7 +4,7 @@ go 1.25.0
 
 require (
 	github.com/go-ldap/ldap/v3 v3.4.14
-	github.com/gomarkdown/markdown v0.0.0-20260923180740-94fc73f6b1a3
+	github.com/yuin/goldmark v1.7.8
 )
 
 require (
